@@ -1,16 +1,59 @@
 let testimonials = document.querySelector("#testimonials");
 const DATE = document.querySelector("#date");
+const BUTTON = document.querySelectorAll("button");
+let initSlide = 0;
 
 DATE.innerHTML = new Date().getFullYear();
 
-fetch("assets/testimonials.json")
-  .then((response) => response.json())
-  .then((data) =>
-    Object.keys(data).map((testimonial) => {
-      displayTestimonials(data[testimonial]);
+window.addEventListener("load", () => {
+  fetch("assets/testimonials.json")
+    .then((response) => response.json())
+    .then((data) => {
+      const testimonials = Object.keys(data);
+      testimonials.map((testimonial, i) => {
+        if (i < 3) {
+          initCarousel = i;
+          displayTestimonials(data[testimonial]);
+        }
+      });
     })
-  )
-  .catch((error) => console.log(error));
+    .catch((error) => console.log(error));
+});
+
+BUTTON.forEach((element) => {
+  element.addEventListener("click", () => {
+    // initSlide += parseInt(element.dataset.slide);
+    // displayTestimonials(data[initSlide]);
+
+    fetch(`assets/testimonials.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        const TESTIMONIALS = Object.keys(data);
+        if (element.id === "prev") {
+          if (initSlide > 0) {
+            initSlide -= 3;
+            testimonials.innerHTML = "";
+            TESTIMONIALS.map((testimonial, i) => {
+              if (initSlide <= i && initSlide >= i - 2) {
+                displayTestimonials(data[testimonial]);
+              }
+            });
+          }
+        } else {
+          if (initSlide < TESTIMONIALS.length - 3) {
+            initSlide += 3;
+            testimonials.innerHTML = "";
+            TESTIMONIALS.map((testimonial, i) => {
+              if (initSlide <= i && initSlide >= i - 2) {
+                displayTestimonials(data[testimonial]);
+              }
+            });
+          }
+        }
+      })
+      .catch((error) => console.log(error));
+  });
+});
 
 function displayTestimonials(data) {
   testimonials.innerHTML += `
@@ -36,6 +79,5 @@ function displayStars(count) {
   for (let i = 0; i < count; i++) {
     stars += `<svg class="h-4 w-4 text-yellow-500 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
   }
-
   return stars;
 }
