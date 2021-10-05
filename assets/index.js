@@ -1,6 +1,6 @@
-let testimonials = document.querySelector("#testimonials");
 const DATE = document.querySelector("#date");
 const BUTTON = document.querySelectorAll("button");
+let testimonials = document.querySelector("#testimonials");
 let initSlide = 0;
 
 DATE.innerHTML = new Date().getFullYear();
@@ -22,9 +22,6 @@ window.addEventListener("load", () => {
 
 BUTTON.forEach((element) => {
   element.addEventListener("click", () => {
-    // initSlide += parseInt(element.dataset.slide);
-    // displayTestimonials(data[initSlide]);
-
     fetch(`assets/testimonials.json`)
       .then((response) => response.json())
       .then((data) => {
@@ -51,7 +48,7 @@ BUTTON.forEach((element) => {
           }
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   });
 });
 
